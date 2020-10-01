@@ -1,6 +1,6 @@
 package com.tihendri.swingy.view.console;
 
-import com.tihendri.swingy.controller.ConsoleController;
+import com.tihendri.swingy.controller.Controller;
 import com.tihendri.swingy.controller.Reader;
 import com.tihendri.swingy.model.characters.Character;
 import com.tihendri.swingy.controller.DatabaseOps;
@@ -25,13 +25,13 @@ public class ConsoleView {
                 character = DatabaseOps.newCharacterDB(type, player);
                 start = ConsoleViewSupport.printStatistics(player, character, type);
                 if (start == 1) {
-                    ConsoleController.start(character);
+                    Controller.start(character);
                 } else {
                     System.out.println("goodbye");
                     System.exit(0);
                 }
             } else if (newOrOldPlayer == 2) {
-                Reader.getAllPlayers();
+                Reader.getAllCharacters();
                 Scanner scanner = new Scanner(System.in);
                 while (scanner.hasNextLine()) {
                     String str = scanner.nextLine();
@@ -44,14 +44,14 @@ public class ConsoleView {
                                 break;
                             }
                         } catch (Exception e) {
-                            System.out.println("Wrong input value!");
+                            System.out.println((char)27 + "[031mWrong input value!" + (char)27 + "[0m");
                         }
                     } else {
-                        System.out.println("Wrong input value!");
+                        System.out.println((char)27 + "[031mWrong input value!" + (char)27 + "[0m");
                     }
                 }
-                character = DatabaseOps.setCharacter(Reader.getPlayer(opt));
-                ConsoleController.start(character);
+                character = DatabaseOps.setCharacter(Reader.getYourCharacter(opt));
+                Controller.start(character);
             }
         } catch (Exception e) {
             System.out.println(e.getMessage());
