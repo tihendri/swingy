@@ -15,15 +15,15 @@ import java.util.Random;
 
 public class NewCharacter {
 
-    public static Character newCharacter(String character, String type, Artifact artifact, Stats stats) {
-        if (type.equals("Viking")) { //make more character models and replace with switch
-            return new Viking(character, artifact, stats);
+    public static Character newCharacter(String characterName, String type, Artifact artifact, Stats stats) {
+        if (type.equals("Viking")) {
+            return new Viking(characterName, artifact, stats);
         }
         else if (type.equalsIgnoreCase("Crusader")) {
-            return new Crusader(character, artifact, stats);
+            return new Crusader(characterName, artifact, stats);
         }
         else if (type.equalsIgnoreCase("Druid")) {
-            return new Druid(character, artifact, stats);
+            return new Druid(characterName, artifact, stats);
         }
         else {
             return null;
@@ -39,7 +39,7 @@ public class NewCharacter {
 
         Random random = new Random();
         int monster = random.nextInt(2) + 1;
-        String artifact = Artifact.randomArtifact(); // remember switch statement
+        String artifact = Artifact.randomArtifact();
 
         switch (monster) {
             case 1:
@@ -107,7 +107,7 @@ public class NewCharacter {
                         defence = 5 + armor.getDefence();
                         hitPoints = 50;
                         xp = 0;
-                        return (new Basilisk(armor, attack, defence, hitPoints, level, xp));
+                        return (new SJW(armor, attack, defence, hitPoints, level, xp));
                     case "Weapon":
                         Weapon weapon = new Weapon("Weapon");
                         level = character.getStats().getLevel();
@@ -115,7 +115,7 @@ public class NewCharacter {
                         defence = 5;
                         hitPoints = 50;
                         xp = 0;
-                        return (new Basilisk(weapon, attack, defence, hitPoints, level, xp));
+                        return (new SJW(weapon, attack, defence, hitPoints, level, xp));
                     case "Helm":
                         Helm helm = new Helm("Helm");
                         level = character.getStats().getLevel();

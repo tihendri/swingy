@@ -56,15 +56,15 @@ public class Stats {
 
     public void setXp(int xp) {
         this.xp += xp;
-//        if (this.xp < 1) {
-//            this.xp = xp; // might not be necessary
-//        }
+        if (this.xp < 1) {
+            this.xp = xp;
+        }
     }
 
     public void setHitPoints(int hitPoints) {
         this.hitPoints += hitPoints;
         if (this.hitPoints < 1) {
-            this.hitPoints = 0; // Come back to put exception for death
+            this.hitPoints = 0;
         }
     }
 

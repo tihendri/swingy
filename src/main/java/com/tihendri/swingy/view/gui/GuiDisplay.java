@@ -13,7 +13,7 @@ import java.awt.*;
 public class GuiDisplay extends JFrame {
 
     public int type;
-    public String hero;
+    public String character;
     public String playerData;
     public String[] ch = null;
     public static Character player = new Character();
@@ -21,10 +21,10 @@ public class GuiDisplay extends JFrame {
     public GuiDisplay() {}
 
     public void createView() {
-        JLabel label = new JLabel("Create Player");
-        JLabel label1 = new JLabel("Enter player name");
+        JLabel label = new JLabel("Create Character");
+        JLabel label1 = new JLabel("Enter character name");
         JButton helloButton = new JButton("ENTER");
-        JFrame helloF = new JFrame("Creation of your Player");
+        JFrame helloF = new JFrame("Character Creation");
         JButton backButton = new JButton("Back");
         JTextField playerName = new JTextField();
 
@@ -74,18 +74,18 @@ public class GuiDisplay extends JFrame {
         helloF.setResizable(false);
 
         backButton.addActionListener(e -> {
-            guiView();
+            start();
             helloF.dispose();
         });
 
         helloButton.addActionListener(e -> {
-            hero = playerName.getText();
-            hero = hero.trim();
-            if (hero.length() > 0){
-                ch = hero.split("\\s");
-                hero = String.join("_", ch);
-                if (hero.isEmpty()) {
-                    JOptionPane.showMessageDialog(null, "Messages.INVALID_NAME");
+            character = playerName.getText();
+            character = character.trim();
+            if (character.length() > 0){
+                ch = character.split("\\s");
+                character = String.join("_", ch);
+                if (character.isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "Invalid input.");
                 }
                 else {
                     createPlayerView();
@@ -93,16 +93,16 @@ public class GuiDisplay extends JFrame {
                     helloF.dispose();
                 }
             } else {
-                JOptionPane.showMessageDialog(null, "Messages.INVALID_NAME");
+                JOptionPane.showMessageDialog(null, "Invalid input.");
             }
         });
         System.out.println("createView");
     }
 
-    public void guiView() {
-        JButton createPlayerButton = new JButton("Create Player");
-        JButton selectPlayerButton = new JButton("Select Player");
-        JFrame playerF = new JFrame("SWINGY");
+    public void start() {
+        JButton createPlayerButton = new JButton("Create New Character");
+        JButton selectPlayerButton = new JButton("Select Old Character");
+        JFrame playerFrame = new JFrame("SWINGY");
 
         createPlayerButton.setBounds(180, 170, 220, 40);
         createPlayerButton.setBackground(Color.ORANGE);
@@ -117,35 +117,35 @@ public class GuiDisplay extends JFrame {
         selectPlayerButton.setBorderPainted(false);
         selectPlayerButton.setFont(new Font("Courier", Font.PLAIN, 16));
 
-        playerF.add(createPlayerButton);
-        playerF.add(selectPlayerButton);
-        playerF.setSize(500, 500);
-        playerF.setBackground(Color.LIGHT_GRAY);
-        playerF.getContentPane().setBackground(Color.GRAY);
-        playerF.setLocationRelativeTo(null);
-        playerF.setLayout(null);
-        playerF.setVisible(true);
-        playerF.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        playerF.setResizable(false);
+        playerFrame.add(createPlayerButton);
+        playerFrame.add(selectPlayerButton);
+        playerFrame.setSize(500, 500);
+        playerFrame.setBackground(Color.LIGHT_GRAY);
+        playerFrame.getContentPane().setBackground(Color.GRAY);
+        playerFrame.setLocationRelativeTo(null);
+        playerFrame.setLayout(null);
+        playerFrame.setVisible(true);
+        playerFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        playerFrame.setResizable(false);
 
         createPlayerButton.addActionListener(e -> {
             createView();
-            playerF.dispose();
+            playerFrame.dispose();
         });
 
         selectPlayerButton.addActionListener(e -> {
             selectPlayerView();
-            playerF.setVisible(false);
-            playerF.dispose();
+            playerFrame.setVisible(false);
+            playerFrame.dispose();
         });
-        System.out.println("guiView");
+        System.out.println("start");
     }
 
     public void selectPlayerView() {
         String[] elements = Reader.readLines();
         JList<? extends String> playerList = new JList<>(elements);
-        JLabel label = new JLabel("Select hero from existing ones");
-        JFrame selectFr = new JFrame("Select Player");
+        JLabel label = new JLabel("Select character");
+        JFrame selectFr = new JFrame("Select Character");
         JButton enterButton = new JButton("Continue");
         JButton quit = new JButton("Quit");
         JButton backButton = new JButton("Back");
@@ -163,7 +163,7 @@ public class GuiDisplay extends JFrame {
         playerList.setFont(new Font("Courier", Font.PLAIN, 12));
         playerList.setSelectedIndex(0);
 
-        enterButton.setBounds(365, 70, 100, 40); // 365 70 100 40
+        enterButton.setBounds(365, 70, 100, 40);
         enterButton.setBackground(Color.ORANGE);
         enterButton.setOpaque(true);
         enterButton.setBorderPainted(false);
@@ -175,7 +175,7 @@ public class GuiDisplay extends JFrame {
         quit.setBorderPainted(false);
         quit.setFont(new Font("Courier", Font.PLAIN, 13));
 
-        backButton.setBounds(365, 170, 100, 40); // 365 390 100 40
+        backButton.setBounds(365, 170, 100, 40);
         backButton.setBackground(Color.ORANGE);
         backButton.setOpaque(true);
         backButton.setBorderPainted(false);
@@ -202,7 +202,7 @@ public class GuiDisplay extends JFrame {
 
         enterButton.addActionListener(e -> {
             if (playerData == null) {
-                JOptionPane.showMessageDialog(null, "Select your hero at first!");
+                JOptionPane.showMessageDialog(null, "You must select your hero before continuing!");
             } else {
                 game();
                 selectFr.setVisible(false);
@@ -211,7 +211,7 @@ public class GuiDisplay extends JFrame {
         });
 
         backButton.addActionListener(e -> {
-            guiView();
+            start();
             selectFr.dispose();
         });
 
@@ -289,7 +289,7 @@ public class GuiDisplay extends JFrame {
             } else if (druid.isSelected()) {
                 type = 3;
             }
-            playerStatistics();
+            displayCharacterStats();
             createF.setVisible(false);
             createF.dispose();
         });
@@ -301,11 +301,11 @@ public class GuiDisplay extends JFrame {
         System.out.println("createPlayerView");
     }
 
-    public void playerStatistics(){
-        player = DatabaseOps.newCharacterDB(type, hero);
+    public void displayCharacterStats(){
+        player = DatabaseOps.newCharacterDB(type, character);
         String artifact;
-        JLabel label1 = new JLabel("Hero: " + hero);
-        JLabel label2 = new JLabel("Hero: " + player.getStats().getType());
+        JLabel label1 = new JLabel("Character: " + character);
+        JLabel label2 = new JLabel("Faction: " + player.getStats().getType());
         JLabel label3 = new JLabel("Level: " +  (player.getStats().getLevel()));
         JLabel label4 = new JLabel("Attack: " + (player.getStats().getAttack()));
         JLabel label5 = new JLabel("Defense: " + (player.getStats().getDefence()));
@@ -365,7 +365,7 @@ public class GuiDisplay extends JFrame {
         statisticsF.setResizable(false);
 
         enterButton.addActionListener(arg0 -> {
-            playerData = player.getStats().getType() + " " + hero + " " + player.getStats().getLevel() + " " +
+            playerData = player.getStats().getType() + " " + character + " " + player.getStats().getLevel() + " " +
                     player.getStats().getAttack() + " " + player.getStats().getAttack() + " " +
                     player.getStats().getHitPoints() + " " + player.getStats().getXp() + " " + artifact.toUpperCase();
             WriteToFile.writeCharacters(playerData);
@@ -387,18 +387,18 @@ public class GuiDisplay extends JFrame {
         JButton eastButton = new JButton("EAST");
         JButton westButton = new JButton("WEST");
 
-        jungle.setBounds(350, 40, 145, 30);
+        jungle.setBounds(350, 40, 175, 30);
         jungle.setForeground(Color.ORANGE);
         jungle.setBackground(Color.GRAY);
         jungle.setOpaque(true);
         jungle.setFont(new Font("Courier", Font.PLAIN, 20));
-        Border labelBorder = BorderFactory.createLineBorder(Color.ORANGE, 1);
+        Border labelBorder = BorderFactory.createLineBorder(Color.ORANGE, 5);
         jungle.setBorder(labelBorder);
 
         textArea.setBounds(50, 100, 757, 615);
         textArea.setForeground(Color.ORANGE);
         textArea.setBackground(Color.DARK_GRAY);
-        Border border1 = BorderFactory.createLineBorder(Color.ORANGE, 1);
+        Border border1 = BorderFactory.createLineBorder(Color.ORANGE, 5);
         textArea.setBorder(border1);
 
         northButton.setBounds(140, 760, 100, 40);
@@ -439,7 +439,7 @@ public class GuiDisplay extends JFrame {
         swingyF.add(westButton);
         swingyF.add(textArea);
         swingyF.add(jungle);
-        swingyF.setSize(857, 1007);
+        swingyF.setSize(850, 850);
         swingyF.setLocationRelativeTo(null);
         swingyF.setLayout(null);
         swingyF.setVisible(true);

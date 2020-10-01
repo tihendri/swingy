@@ -5,8 +5,7 @@ import com.tihendri.swingy.model.characters.Character;
 import com.tihendri.swingy.model.characters.Stats;
 
 public class Druid extends Character {
-
-    public Druid(String character, Artifact artifact, Stats stats) {
-        super(character, artifact, stats);
+    public Druid(String characterName, Artifact artifact, Stats stats) {
+        super(characterName, artifact, stats);
     }
 }

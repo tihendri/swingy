@@ -21,19 +21,19 @@ public class DatabaseOps {
     public static Character characterSet = new Character();
     public static Character newCharacter = new Character();
 
-    public static Character newCharacterDB(int select, String character) {
+    public static Character newCharacterDB(int select, String characterName) {
         if (select == 1) {
-            return addPlayer("Viking", character);
+            return addPlayer("Viking", characterName);
         } else if (select == 2) {
-            return addPlayer("Crusader", character);
+            return addPlayer("Crusader", characterName);
         } else if (select == 3) {
-            return addPlayer("Druid", character);
+            return addPlayer("Druid", characterName);
         }
         return null;
     }
 
-    private static void setPrintStats(String select, String character, String artifact) {
-        printStats = String.format("%s %s %d %d %d %d %d %s", select, character, level, attack, defence, hitPoints, xp, artifact);
+    public static void setPrintStats(String type, String character, String artifact) {
+        printStats = String.format("%s %s %d %d %d %d %d %s", type, character, level, attack, defence, hitPoints, xp, artifact);
     }
 
     private static String randomArtifact(String[] artifacts) {
@@ -41,7 +41,7 @@ public class DatabaseOps {
         return(artifacts[random.nextInt(3)]);
     }
 
-    private static Character addPlayer(String select, String character){
+    private static Character addPlayer(String select, String characterName){
         String[] artifactsArray = {"WEAPON", "HELM", "ARMOR"};
         artifact = randomArtifact(artifactsArray);
         switch (artifact) {
@@ -53,8 +53,8 @@ public class DatabaseOps {
                 hitPoints = 100;
                 xp = 1000;
                 Stats statistic = new Stats(select, attack, defence, hitPoints, level, xp);
-                newCharacter = NewCharacter.newCharacter(character, select, weapon, statistic);
-                setPrintStats(select, character, artifact);
+                newCharacter = NewCharacter.newCharacter(characterName, select, weapon, statistic);
+                setPrintStats(select, characterName, artifact);
                 break;
             case "ARMOR": {
                 Armor armor = new Armor("ARMOR");
@@ -64,8 +64,8 @@ public class DatabaseOps {
                 hitPoints = 100;
                 xp = 1000;
                 statistic = new Stats(select, attack, defence, hitPoints, level, xp);
-                newCharacter = NewCharacter.newCharacter(character, select, armor, statistic);
-                setPrintStats(select, character, artifact);
+                newCharacter = NewCharacter.newCharacter(characterName, select, armor, statistic);
+                setPrintStats(select, characterName, artifact);
                 break;
             }
             case "HELM": {
@@ -76,8 +76,8 @@ public class DatabaseOps {
                 hitPoints = 100;
                 xp = 1000;
                 statistic = new Stats(select, attack, defence, hitPoints, level, xp);
-                newCharacter = NewCharacter.newCharacter(character, select, helm, statistic);
-                setPrintStats(select, character, artifact);
+                newCharacter = NewCharacter.newCharacter(characterName, select, helm, statistic);
+                setPrintStats(select, characterName, artifact);
                 break;
             }
         }
@@ -92,18 +92,19 @@ public class DatabaseOps {
         int level = Integer.parseInt(array[2]);
         int hitPoints = Integer.parseInt(array[5]);
         int xp = Integer.parseInt(array[6]);
+        String name = array[1];
         String artifact = array[7];
         String type = array[0];
         Stats stats = new Stats(type, attack, defence, hitPoints, level, xp);
         if (artifact.equalsIgnoreCase("Armor")) {
             Armor armor = new Armor("Armor");
-            characterSet = NewCharacter.newCharacter(character, type, armor, stats);
+            characterSet = NewCharacter.newCharacter(name, type, armor, stats);
         } else if (artifact.equalsIgnoreCase("Helm")) {
             Helm helm = new Helm("Helm");
-            characterSet = NewCharacter.newCharacter(character, type, helm, stats);
+            characterSet = NewCharacter.newCharacter(name, type, helm, stats);
         } else if (artifact.equalsIgnoreCase("Weapon")) {
             Weapon weapon = new Weapon("Weapon");
-            characterSet = NewCharacter.newCharacter(character, type, weapon, stats);
+            characterSet = NewCharacter.newCharacter(name, type, weapon, stats);
         }
         System.out.println(characterSet);
         return characterSet;

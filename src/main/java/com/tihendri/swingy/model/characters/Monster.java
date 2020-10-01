@@ -2,6 +2,8 @@ package com.tihendri.swingy.model.characters;
 
 import com.tihendri.swingy.model.artifacts.Artifact;
 
+import javax.validation.constraints.NotNull;
+
 public abstract class Monster {
 
     public int level;
@@ -17,7 +19,7 @@ public abstract class Monster {
     public int counterId;
     public String name;
 
-    public Monster(Artifact artifact, int attack, int defence, int hitPoints, int level, int xp) {
+    public Monster(@NotNull Artifact artifact, @NotNull int attack, @NotNull int defence, @NotNull int hitPoints, @NotNull int level, @NotNull int xp) {
         this.level = level;
         this.attack = attack;
         this.defence = defence;

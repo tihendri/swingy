@@ -5,7 +5,7 @@ import com.tihendri.swingy.model.characters.Character;
 import com.tihendri.swingy.model.characters.Stats;
 
 public class Viking extends Character {
-    public Viking(String character, Artifact artifact, Stats stats) {
-        super(character, artifact, stats);
+    public Viking(String characterName, Artifact artifact, Stats stats) {
+        super(characterName, artifact, stats);
     }
 }
