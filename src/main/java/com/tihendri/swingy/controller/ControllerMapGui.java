@@ -99,15 +99,15 @@ public class ControllerMapGui extends JFrame {
             for (int x = 0; x < mapXCoordinate; x++) {
                 switch (map[y][x]) {
                     case 0:
-                        textArea.append("w   w");
+                        textArea.append("w  w");
                         break;
                     case 1:
                     case 2:
                     case 3:
-                        textArea.append("w " + "m" + " w");
+                        textArea.append("w  " + "m" + "  w");
                         break;
                     default:
-                        textArea.append("| " + "U" + " |");
+                        textArea.append("|  " + "U" + "  |");
                         break;
                 }
             }
@@ -140,12 +140,13 @@ public class ControllerMapGui extends JFrame {
             int result = JOptionPane.showConfirmDialog(this, "You've crossed paths with a " + monster.getMonsterName() + ". Do you want to fight it?", "Fight?", showButton);
             if (result == 0) {
                 Monster encountered = getBattle();
-                int win = ConsoleController.battle(encountered, character);
+                int win = Controller.battle(encountered, character);
                 if (win == 1) {
                     win(encountered);
                     deadMonster(encountered);
                     return true;
                 } else {
+                    WriteToFile.removeLine(character);
                     JOptionPane.showMessageDialog(null, "you died. GAME OVER!");
                     jFrame.dispatchEvent(new WindowEvent(jFrame, WindowEvent.WINDOW_CLOSING));
 
@@ -160,6 +161,7 @@ public class ControllerMapGui extends JFrame {
 //                textArea.append("Your current XP: " + (character.getStats().getXp()));
 //                character.getStats().setXp(-500);
                 if (character.getStats().getXp() <= 0) {
+                    WriteToFile.removeLine(character);
                     JOptionPane.showMessageDialog(null, "You ran out of experience points, therefore it's GAME OVER!");
                     jFrame.dispatchEvent(new WindowEvent(jFrame, WindowEvent.WINDOW_CLOSING));
                 }
@@ -256,7 +258,9 @@ public class ControllerMapGui extends JFrame {
             levelUp();
         } else if (type == 2) {
             character.getStats().setXp(character.getStats().getXp());
-            Reader.updatePlayersList(character);
+//            Reader.updatePlayersList(character);
+            WriteToFile.removeLine(character);
+            WriteToFile.writeCharactersStatsChange(character);
             levelUp();
         }
     }
@@ -265,35 +269,41 @@ public class ControllerMapGui extends JFrame {
 //        monsterArrayList.remove(encountered);
 //        deadMonster(encountered);
         updateXP(2);
-        if (ConsoleController.chance()) {
+        if (Controller.chance()) {
             int showButton = JOptionPane.YES_NO_OPTION;
             int yesOrNo = JOptionPane.showConfirmDialog(this, "You destroyed the monster and it has dropped " + encountered.getArtifact().getType() + ". Do you want to pick it up?", "Loot?", showButton);
             if (yesOrNo == 0) {
-                String type = monster.getArtifact().getType();
+                String type = encountered.getArtifact().getType();
                 switch (type) {
                     case "WEAPON":
                         Weapon weapon = new Weapon("WEAPON");
                         character.setArtifact(weapon);
                         character.getStats().setAttack(70);
-                        Reader.updatePlayersList(character);
-//                        ConsoleController.start(character);
-//                        GuiDisplay.game();
+//                        Reader.updatePlayersList(character);
+                        WriteToFile.removeLine(character);
+                        WriteToFile.writeCharactersStatsChange(character);
+//                        Controller.start(character);
+                        mapOutput();
                         break;
                     case "ARMOR":
                         Armor armor = new Armor("ARMOR");
                         character.setArtifact(armor);
                         character.getStats().setDefence(60);
-                        Reader.updatePlayersList(character);
-//                        ConsoleController.start(character);
-//                        GuiDisplay.game();
+//                        Reader.updatePlayersList(character);
+                        WriteToFile.removeLine(character);
+                        WriteToFile.writeCharactersStatsChange(character);
+//                        Controller.start(character);
+                        mapOutput();
                         break;
                     case "HELM":
                         Helm helm = new Helm("HELM");
                         character.setArtifact(helm);
                         character.getStats().setHitPoints(80);
-                        Reader.updatePlayersList(character);
-//                        ConsoleController.start(character);
-//                        GuiDisplay.game();
+//                        Reader.updatePlayersList(character);
+                        WriteToFile.removeLine(character);
+                        WriteToFile.writeCharactersStatsChange(character);
+//                        Controller.start(character);
+                        mapOutput();
                         break;
                 }
             } else if (yesOrNo == 1) {
@@ -307,8 +317,8 @@ public class ControllerMapGui extends JFrame {
             } catch (InterruptedException e) {
                 System.exit(0);
             }
-//            ConsoleController.start(character);
-//            GuiDisplay.game();
+//            Controller.start(character);
+            mapOutput();
         }
     }
 
@@ -331,7 +341,9 @@ public class ControllerMapGui extends JFrame {
 
         if (this.level > character.getStats().getLevel()) {
             character.getStats().setLevel(this.level);
-            Reader.updatePlayersList(character);
+//            Reader.updatePlayersList(character);
+            WriteToFile.removeLine(character);
+            WriteToFile.writeCharactersStatsChange(character);
             JOptionPane.showMessageDialog(null, "You've leveled up!");
             monsterArrayList.removeAll(monsterArrayList);
             textArea.append(this.level + "\n");
