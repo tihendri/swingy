@@ -5,8 +5,7 @@ import com.tihendri.swingy.model.characters.Character;
 import com.tihendri.swingy.model.characters.Stats;
 
 public class Crusader extends Character {
-
-    public Crusader(String character, Artifact artifact, Stats stats) {
-        super(character, artifact, stats);
+    public Crusader(String characterName, Artifact artifact, Stats stats) {
+        super(characterName, artifact, stats);
     }
 }
