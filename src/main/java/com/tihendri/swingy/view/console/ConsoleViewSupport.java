@@ -23,7 +23,7 @@ public class ConsoleViewSupport {
         Scanner scanner = new Scanner(System.in);
         while (scanner.hasNextLine()) {
             String str = scanner.nextLine();
-            if (str.matches("\\s*[1-2]\\s*")) {
+            if (str.matches("1") || str.matches("2")) {
                 select = Integer.parseInt(str);
                 break;
             } else {
