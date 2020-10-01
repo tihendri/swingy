@@ -1,42 +1,48 @@
 package com.tihendri.swingy.controller;
 
-import com.tihendri.swingy.model.characters.Character;
-
-import javax.validation.constraints.NotNull;
 import java.io.*;
 
 public class Reader {
 
-    public static void updatePlayersList(Character character) {
-        try {
-            File file = new File("Characters.txt");
-            FileWriter fileWriter = new FileWriter(file);
-            @NotNull(message = "Values from text file cannot be null/text file cannot be empty")
-            String[] elements = readLines();
-            String delLine = null;
-            String newLine;
-            assert elements != null;
-            for (String str : elements) {
-                if (str.contains(character.getCharacter()) && str.contains(character.getStats().getType())) {
-                    delLine =str;
-                }
-            }
-            newLine = (character.getStats().getType() + " " + character.getCharacter() + " " + character.getStats().getLevel() + " " +
-                    character.getStats().getAttack() + " " + character.getStats().getDefence() + " " +
-                    character.getStats().getHitPoints() + " " + character.getStats().getXp() + " " +
-                    character.getArtifact().getType().toUpperCase());
-            for (String str : elements) {
-                if (str.equals(delLine)) {
-                    fileWriter.write(newLine + "\n");
-                } else {
-                    fileWriter.write(str + "\n");
-                }
-            }
-            fileWriter.close();
-        } catch (IOException e) {
-            System.out.println("Faulty Characters file");
-        }
-    }
+//    public static String updatedStats;
+//
+//    public static void updatePlayersList(Character character) {
+//        try {
+//            File file = new File("Characters.txt");
+//            FileWriter fileWriter = new FileWriter(file);
+//            Scanner scanner = new Scanner(file);
+////            String[] elements = readLines();
+//            String delLine = null;
+//            String newLine;
+//            WriteToFile.removeLine(character);
+////            assert elements != null;
+////            for (String str : elements) {
+////                if (str.contains(character.getCharacter())) {
+////                    delLine = str;
+////                }
+////            }
+//            updatedStats = character.getStats().getType() + " " + character.getCharacterName() + " " + character.getStats().getLevel() + " " +
+//                    character.getStats().getAttack() + " " + character.getStats().getDefence() + " " +
+//                    character.getStats().getHitPoints() + " " + character.getStats().getXp() + " " +
+//                    character.getArtifact().getType().toUpperCase();
+////            while (scanner.hasNextLine()) {
+////            for (String str : elements) {
+////                String str = scanner.nextLine();
+////                if (str.contains(character.getCharacter())) {
+////                    WriteToFile.writeCharacters(updatedStats);
+////                    fileWriter.write(newLine + "\n");
+////                    break;
+////                }
+////                else {
+////                    fileWriter.write(str + "\n");
+////                }
+////            }
+////            }
+////            fileWriter.close();
+//        } catch (IOException e) {
+//            System.out.println("Faulty Characters file");
+//        }
+//    }
 
     public static String[] readLines() {
         try {
@@ -53,12 +59,12 @@ public class Reader {
             bufferedReader.close();
             return elements;
         } catch (IOException e) {
-//            e.getMessage();
+            System.exit(1);
         }
         return null;
     }
 
-    public static void getAllPlayers() {
+    public static void getAllCharacters() {
         String[] elements;
         int id = 0;
         int count = 1;
@@ -75,17 +81,17 @@ public class Reader {
             File file = new File("Characters.txt");
             FileReader fileReader = new FileReader(file);
             LineNumberReader lineNumberReader = new LineNumberReader(fileReader);
-//            lineNumberReader.skip(Long.MAX_VALUE);
+            lineNumberReader.skip(Long.MAX_VALUE);
             int counter = lineNumberReader.getLineNumber();
             lineNumberReader.close();
             return counter;
         } catch (IOException e) {
-//            e.getMessage();
+            System.exit(1);
         }
         return -1;
     }
 
-    public static String getPlayer(int character) {
+    public static String getYourCharacter(int character) {
         String[] elements;
         elements = readLines();
         assert elements != null;
