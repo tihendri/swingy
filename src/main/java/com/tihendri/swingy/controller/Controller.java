@@ -8,7 +8,7 @@ import com.tihendri.swingy.view.console.ConsoleViewSupport;
 import java.util.Random;
 import java.util.Scanner;
 
-public class ConsoleController {
+public class Controller {
 
     public static void start(Character character) {
         ControllerMap controllerMap = new ControllerMap(character);
@@ -41,12 +41,13 @@ public class ConsoleController {
                         ConsoleViewSupport.directions();
                         break;
                     case 5:
+                        WriteToFile.close();
                         System.exit(0);
                     default:
-                        System.out.println("Wrong input value!");
+                        System.out.println((char)27 + "[031mWrong input value!" + (char)27 + "[0m");
                 }
             } else {
-                System.out.println("Wrong input value!");
+                System.out.println((char)27 + "[031mWrong input value!" + (char)27 + "[0m");
             }
         }
     }
@@ -70,19 +71,21 @@ public class ConsoleController {
 
     private static int getVictoryGuiConsole(Monster monster, Character character, Random random, int battle, int victory) {
         int damage;
-        if (character.getStats().getHitPoints() > 20) {
+        if (character.getStats().getHitPoints() > 30) {
             while (character.getStats().getHitPoints() > 0 && monster.getHitPoints() > 0) {
                 if (!Main.guiOrConsole) {
-                    System.out.println("Enemy HP: " + monster.getHitPoints() + "\n" +
-                            "Player HP: " + character.getStats().getHitPoints());
+                    System.out.println((char)27 + "[031mEnemy HP: " + monster.getHitPoints() + (char)27 + "[0m");
+                    System.out.println((char)27 + "[032mPlayer HP: " + character.getStats().getHitPoints() + (char)27 + "[0m\n");
                 }
                 if (battle == 0) {
                     damage = random.nextInt(30) + 1;
                     if (monster.getHitPoints() > 0) {
                         character.getStats().setHitPoints(-damage);
-                        Reader.updatePlayersList(character);
+//                        Reader.updatePlayersList(character);
+                        WriteToFile.removeLine(character);
+                        WriteToFile.writeCharactersStatsChange(character);
                         if (!Main.guiOrConsole) {
-                            System.out.println("Due to monster attack you lost " + damage + " HP");
+                            System.out.println((char)27 + "[031mDue to monster attack you lost " + damage + " HP" + (char)27 + "[0m");
                         }
                         if (character.getStats().getHitPoints() <= 0) {
                             break;
@@ -94,10 +97,17 @@ public class ConsoleController {
                     if (character.getStats().getHitPoints() > 0) {
                         monster.setHitPoints(-damage);
                         if (!Main.guiOrConsole) {
-                            System.out.println("Due to your attack the monster lost " + damage + " HP");
+                            System.out.println((char)27 + "[032mDue to your attack the monster lost " + damage + " HP" + (char)27 + "[0m\n");
                         }
                         if (monster.getHitPoints() <= 0) {
                             victory = 1;
+                            if (!Main.guiOrConsole) {
+                                System.out.println((char) 27 + "[032mYou won that fight! Thanks to your Taekwondo!" + (char) 27 + "[0m\n");
+                            }
+                            break;
+                        }
+                        if (character.getStats().getHitPoints() <= 0) {
+                            victory = 2;
                             break;
                         }
                         battle = 0;
@@ -106,7 +116,8 @@ public class ConsoleController {
             }
         } else {
             if (!Main.guiOrConsole) {
-                System.out.println("You do not have enough HP to fight (" + character.getStats().getHitPoints() + ")");
+                System.out.println((char)27 + "[031mYou do not have enough HP to fight (" + character.getStats().getHitPoints() + ")" + (char)27 + "[0m");
+                victory = 3;
             }
         }
         return victory;
