@@ -13,13 +13,12 @@ import java.util.Scanner;
 
 public class ControllerMap {
 
+    public static Character character;
     private static int[][] map;
     private int monsters;
     private static int size;
     private int yCoordinates;
     private int xCoordinates;
-    public static Character character;
-    private Monster monster;
     private static final ArrayList<Monster> monsterArrayList = new ArrayList<>();
     private static final ArrayList<Monster> tempMonsterArray = new ArrayList<>();
     private boolean set;
@@ -102,7 +101,9 @@ public class ControllerMap {
 
     private boolean encounteredMonsterConsole(Monster monster, int yp, int xp, int yv, int xv) {
         if ((xp == xv) && (yp == yv)) {
-            System.out.println("You've encountered a " + monster.getMonsterName());
+            Monster encountered = getBattle();
+            assert encountered != null;
+            System.out.println("You've encountered a " + encountered.getMonsterName());
             System.out.println("1. Flee");
             System.out.println("2. Fight");
 
@@ -124,30 +125,31 @@ public class ControllerMap {
                         }
                         return true;
                     } else if (choice == 2) {
-                        Monster encountered = getBattle();
-                        int win = Controller.battle(encountered, character);
-                        if (win == 1) {
-                            win(encountered);
-                            deadMonster(encountered);
-                            return true;
-                        } else if (win == 2) {
-                            WriteToFile.removeLine(character);
-                            System.out.println((char)27 + "[031mYou died. GAME OVER!" + (char)27 + "[0m");
-                            System.exit(0);
-                        } else {
+                        if (character.getStats().getHitPoints() < 30) {
+                            System.out.println((char)27 + "[031mYou do not have enough HP to fight (" + character.getStats().getHitPoints() + ")" + (char)27 + "[0m");
                             int whatToDo = whatToDoWithLowHP(encountered);
                             if (whatToDo == 1) {
+//                                deadMonster(encountered);
                                 win(encountered);
-                                deadMonster(encountered);
                                 return true;
                             } else if (whatToDo == 2) {
                                 WriteToFile.removeLine(character);
-                                assert encountered != null;
                                 System.out.println((char)27 + "[031mThe " + encountered.getMonsterName() + " has eaten you alive.\n" +
                                         "GAME OVER!" + (char)27 + "[0m");
                                 System.exit(0);
-                            } else if (whatToDo == 3) {
+                            } else {
                                 return true;
+                            }
+                        } else {
+                            int win = Controller.battle(encountered, character);
+                            if (win == 1) {
+//                                deadMonster(encountered);
+                                win(encountered);
+                                return true;
+                            } else if (win == 2) {
+                                WriteToFile.removeLine(character);
+                                System.out.println((char)27 + "[031mYou died. GAME OVER!" + (char)27 + "[0m");
+                                System.exit(0);
                             }
                         }
                     } else {
@@ -161,29 +163,37 @@ public class ControllerMap {
         return false;
     }
 
+    private int Randomizer() {
+        Random random = new Random();
+        int rand = random.nextInt(21);
+        if (rand > 10) {
+            return 1;
+        }
+        return 0;
+    }
+
     private int whatToDoWithLowHP(Monster encountered) {
         System.out.println("What do you want to do?");
         System.out.println("1. Try to escape");
         System.out.println("2. Stay and fight");
 
         Scanner scanner = new Scanner(System.in);
-        Random random = new Random();
         while (scanner.hasNextLine()) {
             String str = scanner.nextLine();
             if (str.matches("\\s*[1-2]\\s*")) {
                 int choice = Integer.parseInt(str);
-                int rand = random.nextInt(3);
+                int rand = Randomizer();
                 if (choice == 1 && rand == 1) {
-                    character.getStats().setHitPoints(character.getStats().getHitPoints() + 10);
+                    character.getStats().setHitPoints(10);
                     System.out.println((char)27 + "[032mYou managed to escape! Because of your escaping skills, Houdini has granted you 10 HP." + (char)27 + "[0m");
                     return 3;
                 } else if (choice == 2) {
-                    character.getStats().setHitPoints(character.getStats().getHitPoints() + 30);
+                    character.getStats().setHitPoints(30);
                     System.out.println((char)27 + "[032mYou are a true warrior! Odin has granted you 30 HP." + (char)27 + "[0m\n");
                     return Controller.battle(encountered, character);
                 } else {
                     System.out.println((char)27 + "[031mYou failed to escape the clutches of this beast. You face a terrible fate." + (char)27 + "[0m\n");
-                    return 2;
+                    return Controller.battle(encountered, character);
                 }
             }
         }
@@ -209,7 +219,7 @@ public class ControllerMap {
                     yPosition = random.nextInt(size);
                 } while (yPosition == this.yCoordinates || xPosition == this.xCoordinates);
             }
-            monster = NewCharacter.spawnMonsters(character);
+            Monster monster = NewCharacter.spawnMonsters(character);
             assert monster != null;
             monster.setEnemyPosition(xPosition, yPosition);
             registerMonster(monster);
@@ -272,36 +282,40 @@ public class ControllerMap {
     }
 
     private void updateXP(int type) {
-        if (type == 1) {
-            int exp;
-            if (character.getStats().getXp() < 2450) {
-                exp = 2450;
-                character.getStats().setXp(exp);
-            } else if (character.getStats().getXp() < 4800) {
-                exp = 4800;
-                character.getStats().setXp(exp);
-            } else if (character.getStats().getXp() < 8050) {
-                exp = 8050;
-                character.getStats().setXp(exp);
-            } else if (character.getStats().getXp() < 12200) {
-                exp = 12200;
-                character.getStats().setXp(exp);
-            } else if (character.getStats().getXp() < 12201) {
-                System.out.println("you've reached the maximum amount of XP! You WIN!");
-                System.exit(0);
-            }
-            levelUp();
-        } else if (type == 2) {
-            character.getStats().setXp(character.getStats().getXp());
-//            Reader.updatePlayersList(character);
-            WriteToFile.removeLine(character);
-            WriteToFile.writeCharactersStatsChange(character);
-            levelUp();
+        switch (type) {
+            case 1:
+                int exp;
+                if (character.getStats().getXp() <= 2450) {
+                    exp = 2450;
+                    character.getStats().setXp(exp);
+                } else if (character.getStats().getXp() <= 4800) {
+                    exp = 4800;
+                    character.getStats().setXp(exp);
+                } else if (character.getStats().getXp() <= 8050) {
+                    exp = 8050;
+                    character.getStats().setXp(exp);
+                } else if (character.getStats().getXp() <= 12200) {
+                    exp = 12200;
+                    character.getStats().setXp(exp);
+                }
+                if (character.getStats().getXp() >= 12201) {
+                    System.out.println("you've reached the maximum amount of XP! You WIN!");
+                    System.exit(0);
+                }
+                levelUp();
+                break;
+            case 2:
+                character.getStats().setXp(character.getStats().getXp());
+                WriteToFile.removeLine(character);
+                WriteToFile.writeCharactersStatsChange(character);
+                levelUp();
+                break;
         }
     }
 
     private void win(Monster encountered) {
-        monsterArrayList.remove(encountered);
+//        monsterArrayList.remove(encountered);
+        deadMonster(encountered);
         updateXP(2);
         if (Controller.chance()) {
             System.out.println("You killed encountered enemy, he dropped an artifact." + "\n" +
@@ -321,7 +335,6 @@ public class ControllerMap {
                                 Weapon weapon = new Weapon("WEAPON");
                                 character.setArtifact(weapon);
                                 character.getStats().setAttack(70);
-//                                Reader.updatePlayersList(character);
                                 WriteToFile.removeLine(character);
                                 WriteToFile.writeCharactersStatsChange(character);
                                 Controller.start(character);
@@ -330,7 +343,6 @@ public class ControllerMap {
                                 Armor armor = new Armor("ARMOR");
                                 character.setArtifact(armor);
                                 character.getStats().setDefence(60);
-//                                Reader.updatePlayersList(character);
                                 WriteToFile.removeLine(character);
                                 WriteToFile.writeCharactersStatsChange(character);
                                 Controller.start(character);
@@ -339,7 +351,6 @@ public class ControllerMap {
                                 Helm helm = new Helm("HELM");
                                 character.setArtifact(helm);
                                 character.getStats().setHitPoints(80);
-//                                Reader.updatePlayersList(character);
                                 WriteToFile.removeLine(character);
                                 WriteToFile.writeCharactersStatsChange(character);
                                 Controller.start(character);
@@ -347,6 +358,7 @@ public class ControllerMap {
                         }
                     } else if (choice == 2) {
                         updateXP(2);
+                        break;
                     }
                 } else {
                     System.out.println((char)27 + "[031mWrong input value!" + (char)27 + "[0m");
@@ -383,7 +395,6 @@ public class ControllerMap {
 
         if (this.level > character.getStats().getLevel()) {
             character.getStats().setLevel(this.level);
-//            Reader.updatePlayersList(character);
             WriteToFile.removeLine(character);
             WriteToFile.writeCharactersStatsChange(character);
 
