@@ -44,21 +44,21 @@ public class ConsoleViewSupport {
     }
 
     public static String enterHeroName() {
-        System.out.println("To continue enter your player name:");
-        String player = null;
+        System.out.println("To continue please enter your character's name:");
+        String characterName = null;
         Scanner scanner = new Scanner(System.in);
         while (scanner.hasNextLine()) {
-            player = scanner.nextLine();
-            player = player.trim();
-            if (player.length() > 0) {
-                String[] ch = player.split("\\s");
-                player = String.join("_", ch);
+            characterName = scanner.nextLine();
+            characterName = characterName.trim();
+            if (characterName.length() > 0) {
+                String[] ch = characterName.split("\\s");
+                characterName = String.join("_", ch);
                 break;
             } else {
                 System.out.println("Wrong input value!");
             }
         }
-        return player;
+        return characterName;
     }
 
     public static int choosePlayerType() {
