@@ -71,7 +71,7 @@ public class GuiDisplay extends JFrame {
         helloF.setLayout(null);
         helloF.setVisible(true);
         helloF.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        helloF.setResizable(false);
+        helloF.setResizable(true);
 
         backButton.addActionListener(e -> {
             start();
@@ -104,18 +104,18 @@ public class GuiDisplay extends JFrame {
         JButton selectPlayerButton = new JButton("Select Old Character");
         JFrame playerFrame = new JFrame("SWINGY");
 
-        createPlayerButton.setBounds(180, 170, 220, 40);
+        createPlayerButton.setBounds(110, 170, 260, 40);
         createPlayerButton.setBackground(Color.ORANGE);
         createPlayerButton.setOpaque(true);
         createPlayerButton.setBorderPainted(false);
-        createPlayerButton.setFont(new Font("Courier", Font.PLAIN, 16));
+        createPlayerButton.setFont(new Font("Courier", Font.BOLD, 16));
         createPlayerButton.setForeground(Color.GRAY);
 
-        selectPlayerButton.setBounds(180, 260, 220, 40);
+        selectPlayerButton.setBounds(110, 260, 260, 40);
         selectPlayerButton.setBackground(Color.ORANGE);
         selectPlayerButton.setOpaque(true);
         selectPlayerButton.setBorderPainted(false);
-        selectPlayerButton.setFont(new Font("Courier", Font.PLAIN, 16));
+        selectPlayerButton.setFont(new Font("Courier", Font.BOLD, 16));
 
         playerFrame.add(createPlayerButton);
         playerFrame.add(selectPlayerButton);
@@ -126,7 +126,7 @@ public class GuiDisplay extends JFrame {
         playerFrame.setLayout(null);
         playerFrame.setVisible(true);
         playerFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        playerFrame.setResizable(false);
+        playerFrame.setResizable(true);
 
         createPlayerButton.addActionListener(e -> {
             createView();
@@ -161,7 +161,7 @@ public class GuiDisplay extends JFrame {
         playerList.setBackground(Color.ORANGE);
         playerList.setOpaque(true);
         playerList.setFont(new Font("Courier", Font.PLAIN, 12));
-        playerList.setSelectedIndex(0);
+        playerList.setSelectedIndex(1);
 
         enterButton.setBounds(365, 70, 100, 40);
         enterButton.setBackground(Color.ORANGE);
@@ -193,7 +193,7 @@ public class GuiDisplay extends JFrame {
         selectFr.setLayout(null);
         selectFr.setVisible(true);
         selectFr.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        selectFr.setResizable(false);
+        selectFr.setResizable(true);
 
         playerList.addListSelectionListener(arg0 -> {
             playerData = playerList.getSelectedValue();
@@ -279,7 +279,7 @@ public class GuiDisplay extends JFrame {
         createF.setLayout(null);
         createF.setVisible(true);
         createF.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        createF.setResizable(false);
+        createF.setResizable(true);
 
         enterButton.addActionListener(e -> {
             if (viking.isSelected()) {
@@ -378,16 +378,16 @@ public class GuiDisplay extends JFrame {
     }
 
     public static void game() {
-        JFrame swingyF = new JFrame("Ongoing Game");
+        JFrame swingyF = new JFrame("Swingy");
         JLabel jungle = new JLabel(" Swingy Jungle");
         ControllerMapGui map = new ControllerMapGui(swingyF, player);
-        JTextArea textArea = map.mapOutput();
+        JTextArea textArea = map.mapOutputGui();
         JButton northButton = new JButton("NORTH");
         JButton southButton = new JButton("SOUTH");
         JButton eastButton = new JButton("EAST");
         JButton westButton = new JButton("WEST");
 
-        jungle.setBounds(350, 40, 175, 30);
+        jungle.setBounds(350, 40, 190, 30);
         jungle.setForeground(Color.ORANGE);
         jungle.setBackground(Color.GRAY);
         jungle.setOpaque(true);
@@ -425,13 +425,13 @@ public class GuiDisplay extends JFrame {
         eastButton.setBorderPainted(false);
         eastButton.setFont(new Font("Courier", Font.PLAIN, 13));
 
-        northButton.addActionListener(e -> map.updatePosition(0, -1));
+        northButton.addActionListener(e -> map.updatePositionGui(0, -1));
 
-        southButton.addActionListener(e -> map.updatePosition(0, 1));
+        southButton.addActionListener(e -> map.updatePositionGui(0, 1));
 
-        eastButton.addActionListener(e -> map.updatePosition(1, 0));
+        eastButton.addActionListener(e -> map.updatePositionGui(1, 0));
 
-        westButton.addActionListener(e -> map.updatePosition(-1, 0));
+        westButton.addActionListener(e -> map.updatePositionGui(-1, 0));
 
         swingyF.add(northButton);
         swingyF.add(southButton);
@@ -443,7 +443,7 @@ public class GuiDisplay extends JFrame {
         swingyF.setLocationRelativeTo(null);
         swingyF.setLayout(null);
         swingyF.setVisible(true);
-        swingyF.setResizable(false);
+        swingyF.setResizable(true);
         swingyF.setBackground(Color.GRAY);
         swingyF.getContentPane().setBackground(Color.DARK_GRAY);
         swingyF.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
