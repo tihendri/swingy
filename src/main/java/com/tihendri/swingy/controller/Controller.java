@@ -23,22 +23,18 @@ public class Controller {
                 switch (selectDirection) {
                     case 1:
                         controllerMap.updatePosition(0, -1);
-//                        controllerMap.mapOutput();
                         ConsoleViewSupport.directions();
                         break;
                     case 2:
                         controllerMap.updatePosition(0, 1);
-//                        controllerMap.mapOutput();
                         ConsoleViewSupport.directions();
                         break;
                     case 3:
                         controllerMap.updatePosition(1, 0);
-//                        controllerMap.mapOutput();
                         ConsoleViewSupport.directions();
                         break;
                     case 4:
                         controllerMap.updatePosition(-1, 0);
-//                        controllerMap.mapOutput();
                         ConsoleViewSupport.directions();
                         break;
                     case 5:
@@ -61,16 +57,16 @@ public class Controller {
 
     public static int battle(Monster monster, Character character) {
         Random random = new Random();
-        int battle = 0;
+        int turn = 0;
         int victory = 0;
         if (chance() || character.getStats().getAttack() > monster.getHitPoints()) {
-            battle = 1;
+            turn = 1;
         }
-        victory = getVictoryGuiConsole(monster, character, random, battle, victory);
+        victory = getVictoryGuiConsole(monster, character, random, turn, victory);
         return victory;
     }
 
-    private static int getVictoryGuiConsole(Monster monster, Character character, Random random, int battle, int victory) {
+    private static int getVictoryGuiConsole(Monster monster, Character character, Random random, int turn, int victory) {
         int damage;
         while (character.getStats().getHitPoints() > 0 && monster.getHitPoints() > 0) {
             if (!Main.guiOrConsole) {
@@ -80,9 +76,9 @@ public class Controller {
                 JOptionPane.showMessageDialog(null, "Monster HP: " + monster.getHitPoints() + "\n" +
                         "Your HP: " + character.getStats().getHitPoints());
             }
-            if (battle == 0) {
-                damage = random.nextInt(30) + 1;
-                if (monster.getHitPoints() > 0) {
+            if (turn == 0) {
+                damage = random.nextInt(50) - ((character.getStats().getDefence())/5);
+                if (monster.getHitPoints() > 0 && damage > 0) {
                     character.getStats().setHitPoints(-damage);
                     WriteToFile.removeLine(character);
                     WriteToFile.writeCharactersStatsChange(character);
@@ -95,10 +91,16 @@ public class Controller {
                         victory = 2;
                         break;
                     }
-                    battle = 1;
+                } else {
+                    if (!Main.guiOrConsole) {
+                        System.out.println((char)27 + "[032mYour defence held up well. You thwarted the " + monster.getMonsterName() + "'s attack to " + damage + " damage." + (char)27 + "[0m");
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Your defence held up well. You thwarted the " + monster.getMonsterName() + "'s attack to " + damage + " damage.");
+                    }
                 }
+                turn = 1;
             } else {
-                damage = random.nextInt(50) + 1;
+                damage = random.nextInt(30) + ((character.getStats().getAttack())/6);
                 if (character.getStats().getHitPoints() > 0) {
                     monster.setHitPoints(-damage);
                     if (!Main.guiOrConsole) {
@@ -119,8 +121,8 @@ public class Controller {
                         victory = 2;
                         break;
                     }
-                    battle = 0;
                 }
+                turn = 0;
             }
         }
     return victory;
