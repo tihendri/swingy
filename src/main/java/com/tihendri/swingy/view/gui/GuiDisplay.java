@@ -32,13 +32,13 @@ public class GuiDisplay extends JFrame {
         label.setBackground(Color.GRAY);
         label.setForeground(Color.ORANGE);
         label.setOpaque(true);
-        label.setFont(new Font("Courier", Font.PLAIN, 16));
+        label.setFont(new Font("Courier", Font.BOLD, 16));
 
         label1.setBounds(190, 170, 150, 30);
         label1.setBackground(Color.GRAY);
         label1.setForeground(Color.ORANGE);
         label1.setOpaque(true);
-        label1.setFont(new Font("Courier", Font.PLAIN, 14));
+        label1.setFont(new Font("Courier", Font.BOLD, 14));
 
         playerName.setBounds(130, 210, 250, 30);
         playerName.setCaretColor(Color.ORANGE);
@@ -154,32 +154,32 @@ public class GuiDisplay extends JFrame {
         label.setBounds(160, 20, 200, 30);
         label.setBackground(Color.ORANGE);
         label.setOpaque(true);
-        label.setFont(new Font("Courier", Font.PLAIN, 15));
+        label.setFont(new Font("Courier", Font.BOLD, 15));
 
         playerList.setBounds(20, 50, 350, 520);
         playerList.setBounds(20, 70, 320, 360);
         playerList.setBackground(Color.ORANGE);
         playerList.setOpaque(true);
-        playerList.setFont(new Font("Courier", Font.PLAIN, 12));
-        playerList.setSelectedIndex(1);
+        playerList.setFont(new Font("Courier", Font.BOLD, 12));
+//        playerList.setSelectedIndex(1);
 
         enterButton.setBounds(365, 70, 100, 40);
         enterButton.setBackground(Color.ORANGE);
         enterButton.setOpaque(true);
         enterButton.setBorderPainted(false);
-        enterButton.setFont(new Font("Courier", Font.PLAIN, 12));
+        enterButton.setFont(new Font("Courier", Font.BOLD, 12));
 
         quit.setBounds(365, 390, 100, 40);
         quit.setBackground(Color.ORANGE);
         quit.setOpaque(true);
         quit.setBorderPainted(false);
-        quit.setFont(new Font("Courier", Font.PLAIN, 13));
+        quit.setFont(new Font("Courier", Font.BOLD, 13));
 
         backButton.setBounds(365, 170, 100, 40);
         backButton.setBackground(Color.ORANGE);
         backButton.setOpaque(true);
         backButton.setBorderPainted(false);
-        backButton.setFont(new Font("Courier", Font.PLAIN, 13));
+        backButton.setFont(new Font("Courier", Font.ITALIC, 13));
 
         selectFr.add(label);
         selectFr.add(enterButton);
@@ -232,7 +232,7 @@ public class GuiDisplay extends JFrame {
 
         faction.setBounds(165, 55, 200, 30);
         faction.setForeground(Color.ORANGE);
-        faction.setFont(new Font("Courier", Font.PLAIN, 16));
+        faction.setFont(new Font("Arial Hebrew", Font.BOLD, 16));
 
         viking.setBounds(200, 130, 100, 40);
         viking.setForeground(Color.ORANGE);
@@ -317,34 +317,34 @@ public class GuiDisplay extends JFrame {
 
         label1.setBounds(110, 130, 400, 30);
         label1.setForeground(Color.ORANGE);
-        label1.setFont(new Font("Courier", Font.PLAIN, 13));
+        label1.setFont(new Font("Baghdad", Font.PLAIN, 13));
         label2.setBounds(110, 150, 400, 30);
         label2.setForeground(Color.ORANGE);
-        label2.setFont(new Font("Courier", Font.PLAIN, 13));
+        label2.setFont(new Font("Baghdad", Font.PLAIN, 13));
         label3.setBounds(110, 170, 400, 30);
         label3.setForeground(Color.ORANGE);
-        label3.setFont(new Font("Courier", Font.PLAIN, 13));
+        label3.setFont(new Font("Baghdad", Font.PLAIN, 13));
         label4.setBounds(110, 190, 400, 30);
         label4.setForeground(Color.ORANGE);
-        label4.setFont(new Font("Courier", Font.PLAIN, 13));
+        label4.setFont(new Font("Baghdad", Font.PLAIN, 13));
         label5.setBounds(110, 210, 400, 30);
         label5.setForeground(Color.ORANGE);
-        label5.setFont(new Font("Courier", Font.PLAIN, 13));
+        label5.setFont(new Font("Baghdad", Font.PLAIN, 13));
         label6.setBounds(110, 230, 400, 30);
         label6.setForeground(Color.ORANGE);
-        label6.setFont(new Font("Courier", Font.PLAIN, 13));
+        label6.setFont(new Font("Baghdad", Font.PLAIN, 13));
         label7.setBounds(110, 250, 400, 30);
         label7.setForeground(Color.ORANGE);
-        label7.setFont(new Font("Courier", Font.PLAIN, 13));
+        label7.setFont(new Font("Baghdad", Font.PLAIN, 13));
         label8.setBounds(170, 95, 400, 30);
         label8.setForeground(Color.ORANGE);
-        label8.setFont(new Font("Courier", Font.PLAIN, 13));
+        label8.setFont(new Font("Baghdad", Font.PLAIN, 13));
 
         enterButton.setBounds(180, 300, 100, 40);
         enterButton.setBackground(Color.ORANGE);
         enterButton.setOpaque(true);
         enterButton.setBorderPainted(false);
-        enterButton.setFont(new Font("Courier", Font.PLAIN, 12));
+        enterButton.setFont(new Font("Baghdad", Font.PLAIN, 12));
 
         statisticsF.add(label1);
         statisticsF.add(label2);
@@ -391,7 +391,7 @@ public class GuiDisplay extends JFrame {
         jungle.setForeground(Color.ORANGE);
         jungle.setBackground(Color.GRAY);
         jungle.setOpaque(true);
-        jungle.setFont(new Font("Courier", Font.PLAIN, 20));
+        jungle.setFont(new Font("Baghdad", Font.PLAIN, 20));
         Border labelBorder = BorderFactory.createLineBorder(Color.ORANGE, 5);
         jungle.setBorder(labelBorder);
 
@@ -451,15 +451,15 @@ public class GuiDisplay extends JFrame {
     }
 
     public static void endGame() {
-        JLabel label = new JLabel("Going on with out adventure");
+        JLabel label = new JLabel("You've reached the end...");
         JButton close = new JButton("GAME COMPLETED");
         JFrame endGameF = new JFrame("Game Ended");
 
-        label.setBounds(145, 90, 150, 40);
+        label.setBounds(85, 90, 250, 40);
         label.setForeground(Color.ORANGE);
         label.setFont(new Font("Courier", Font.PLAIN, 16));
 
-        close.setBounds(150, 150, 100, 40);
+        close.setBounds(100, 200, 200, 40);
         close.setBackground(Color.ORANGE);
         close.setOpaque(true);
         close.setBorderPainted(false);
