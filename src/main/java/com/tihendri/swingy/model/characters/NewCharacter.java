@@ -38,11 +38,11 @@ public class NewCharacter {
         int hitPoints;
 
         Random random = new Random();
-        int monster = random.nextInt(2) + 1;
+        int monster = random.nextInt(3);
         String artifact = Artifact.randomArtifact();
 
         switch (monster) {
-            case 1:
+            case 0:
                 switch (artifact) {
                     case "Armor":
                         Armor armor = new Armor("Armor");
@@ -70,7 +70,7 @@ public class NewCharacter {
                         return (new Basilisk(helm, attack, defence, hitPoints, level, xp));
                 }
                 break;
-            case 2:
+            case 1:
                 switch (artifact) {
                     case "Armor":
                         Armor armor = new Armor("Armor");
@@ -98,7 +98,7 @@ public class NewCharacter {
                         return (new Forktail(helm, attack, defence, hitPoints, level, xp));
                 }
                 break;
-            case 3:
+            case 2:
                 switch (artifact) {
                     case "Armor":
                         Armor armor = new Armor("Armor");
