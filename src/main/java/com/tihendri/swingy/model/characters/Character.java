@@ -8,8 +8,10 @@ public class Character {
 
     @NotNull(message = "Character cannot be null!")
     public String characterName;
+
     @NotNull(message = "Artifact cannot be null!")
     public Artifact artifact;
+
     @NotNull(message = "Stats cannot be null!")
     public Stats stats = new Stats();
 
