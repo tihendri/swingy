@@ -305,7 +305,7 @@ public class ControllerMap {
                 levelUp();
                 break;
             case 2:
-                character.getStats().setXp(character.getStats().getXp());
+                character.getStats().setXp(500);
                 WriteToFile.removeLine(character);
                 WriteToFile.writeCharactersStatsChange(character);
                 levelUp();
@@ -337,7 +337,7 @@ public class ControllerMap {
                                 character.getStats().setAttack(70);
                                 WriteToFile.removeLine(character);
                                 WriteToFile.writeCharactersStatsChange(character);
-                                Controller.start(character);
+//                                Controller.start(character);
                                 break;
                             case "Armor":
                                 Armor armor = new Armor("ARMOR");
@@ -345,7 +345,7 @@ public class ControllerMap {
                                 character.getStats().setDefence(60);
                                 WriteToFile.removeLine(character);
                                 WriteToFile.writeCharactersStatsChange(character);
-                                Controller.start(character);
+//                                Controller.start(character);
                                 break;
                             case "Helm":
                                 Helm helm = new Helm("HELM");
@@ -353,11 +353,12 @@ public class ControllerMap {
                                 character.getStats().setHitPoints(80);
                                 WriteToFile.removeLine(character);
                                 WriteToFile.writeCharactersStatsChange(character);
-                                Controller.start(character);
+//                                Controller.start(character);
                                 break;
                         }
+                        break;
                     } else if (choice == 2) {
-                        updateXP(2);
+//                        updateXP(2);
                         break;
                     }
                 } else {
@@ -365,15 +366,10 @@ public class ControllerMap {
                 }
             }
         } else {
-            updateXP(2);
+//            updateXP(2);
             System.out.println("You killed that beast!... and destroyed the artifact as well... (sigh)");
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                System.exit(0);
-            }
-            Controller.start(character);
         }
+//        Controller.start(character);
     }
 
     private void levelUp() {
@@ -408,9 +404,8 @@ public class ControllerMap {
                 if (str.matches("\\s*[1-2]\\s*")) {
                     int opt = Integer.parseInt(str);
                     if (opt == 1) {
-                        monsterArrayList.removeAll(monsterArrayList);
+//                        monsterArrayList.removeAll(monsterArrayList);
                         Controller.start(character);
-                        System.out.println("Continue to play");
                     } else if (opt == 2) {
                         System.out.println("goodbye");
                         System.exit(0);
@@ -420,7 +415,7 @@ public class ControllerMap {
                 }
             }
         } else if (this.level == character.getStats().getLevel()) {
-            monsterArrayList.removeAll(monsterArrayList);
+//            monsterArrayList.removeAll(monsterArrayList);
         }
     }
 
