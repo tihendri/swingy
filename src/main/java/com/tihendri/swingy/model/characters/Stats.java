@@ -3,10 +3,15 @@ package com.tihendri.swingy.model.characters;
 public class Stats {
 
     public String type;
+//    @PositiveOrZero(message = "attack must be positive or zero!")
     public int attack;
+//    @PositiveOrZero(message = "defence must be positive or zero!")
     public int defence;
+//    @PositiveOrZero(message = "HitPoints must be positive or zero!")
     public int hitPoints;
+//    @Positive(message = "Level must be positive!")
     public int level;
+//    @Positive(message = "Experience points must be positive!")
     public int xp;
 
     public Stats() {}
