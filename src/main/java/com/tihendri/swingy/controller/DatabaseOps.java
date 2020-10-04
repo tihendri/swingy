@@ -71,9 +71,9 @@ public class DatabaseOps {
             case "HELM": {
                 Helm helm = new Helm("HELM");
                 level = 1;
-                attack = 100 + helm.getHitPoints();
+                attack = 100;
                 defence = 100;
-                hitPoints = 100;
+                hitPoints = 100 + helm.getHitPoints();
                 xp = 1000;
                 statistic = new Stats(select, attack, defence, hitPoints, level, xp);
                 newCharacter = NewCharacter.newCharacter(characterName, select, helm, statistic);
