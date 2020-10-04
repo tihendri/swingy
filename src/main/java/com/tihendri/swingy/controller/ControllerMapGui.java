@@ -23,13 +23,13 @@ public class ControllerMapGui extends JFrame {
     private static int size;
     private int yCoordinates;
     private int xCoordinates;
-    private Monster monster;
     private static final ArrayList<Monster> monsterArrayList = new ArrayList<>();
     private static final ArrayList<Monster> tempMonsterArray = new ArrayList<>();
     private boolean set;
     private int level;
     private static int mapYCoordinate;
     private static int mapXCoordinate;
+    private boolean leveledUpAfterBattle = false;
 
 
     public ControllerMapGui(JFrame jFrame, Character character) {
@@ -56,6 +56,8 @@ public class ControllerMapGui extends JFrame {
     }
 
     public JTextArea mapOutputGui() {
+        textArea.selectAll();
+        textArea.replaceSelection("");
         if (!set) {
             setMapSize();
             setPosition();
@@ -77,8 +79,12 @@ public class ControllerMapGui extends JFrame {
         }
         map[this.yCoordinates][this.xCoordinates] = 4;
         for (Monster monster : monsterArrayList) {
-            boolean meetMonster = encounteredMonsterGui(monster, this.yCoordinates, this.xCoordinates, monster.getMonsterCoordinatesY(), monster.getMonsterCoordinatesX());
+            boolean meetMonster = encounteredMonsterGui(this.yCoordinates, this.xCoordinates, monster.getMonsterCoordinatesY(), monster.getMonsterCoordinatesX());
             if (meetMonster) {
+                if (leveledUpAfterBattle) {
+                    set = false;
+                    return mapOutputGui();
+                }
                 break;
             }
         }
@@ -109,7 +115,7 @@ public class ControllerMapGui extends JFrame {
         return textArea;
     }
 
-    private boolean encounteredMonsterGui(Monster monster, int yCharacter, int xCharacter, int yMonster, int xMonster) {
+    private boolean encounteredMonsterGui(int yCharacter, int xCharacter, int yMonster, int xMonster) {
         if ((xCharacter == xMonster) && (yCharacter == yMonster)) {
             Monster encountered = getBattle();
             int showButton = JOptionPane.YES_NO_OPTION;
@@ -119,23 +125,23 @@ public class ControllerMapGui extends JFrame {
                 if (character.getStats().getHitPoints() < 30) {
                     JOptionPane.showMessageDialog(null, "You do not have enough HP to fight (" + character.getStats().getHitPoints() + ")");
                     int whatToDo = whatToDoWithLowHP(encountered);
-                    if (whatToDo == 1) {
-//                        deadMonster(encountered);
-                        win(encountered);
-                        return true;
-                    } else if (whatToDo == 2) {
-                        WriteToFile.removeLine(character);
-                        JOptionPane.showMessageDialog(null, "The " + encountered.getMonsterName() + " has eaten you alive.\n" +
-                                "GAME OVER!");
-                        jFrame.dispatchEvent(new WindowEvent(jFrame, WindowEvent.WINDOW_CLOSING));
-                    } else {
-                        return true;
+                    switch (whatToDo) {
+                        case 1:
+                            win(encountered);
+                            return true;
+                        case 2:
+                            WriteToFile.removeLine(character);
+                            JOptionPane.showMessageDialog(null, "The " + encountered.getMonsterName() + " has eaten you alive.\n" +
+                                    "GAME OVER!");
+                            jFrame.dispatchEvent(new WindowEvent(jFrame, WindowEvent.WINDOW_CLOSING));
+                            break;
+                        case 3:
+                            return true;
                     }
                 } else {
                     int win = Controller.battle(encountered, character);
                     if (win == 1) {
                         win(encountered);
-//                        deadMonster(encountered);
                         return true;
                     } else if (win == 2) {
                         WriteToFile.removeLine(character);
@@ -158,7 +164,7 @@ public class ControllerMapGui extends JFrame {
     private int Randomizer() {
         Random random = new Random();
         int rand = random.nextInt(21);
-        if (rand > 10) {
+        if (rand >= 13) {
             return 1;
         }
         return 0;
@@ -228,28 +234,9 @@ public class ControllerMapGui extends JFrame {
         this.yCoordinates = y;
     }
 
-    private void positionAssist(int positionX, int positionY) {
-        if (positionX < 0 || positionY < 0) {
-            updateXP(1);
-            levelUp();
-            set = false;
-            mapOutputGui();
-        } else if (positionX >= size || positionY >= size) {
-            updateXP(1);
-            levelUp();
-            set = false;
-            mapOutputGui();
-        } else {
-            textArea.selectAll();
-            textArea.replaceSelection("");
-            mapOutputGui();
-        }
-    }
-
     public void updatePositionGui(int positionX, int positionY) {
         this.xCoordinates += positionX;
         this.yCoordinates += positionY;
-//        positionAssist(this.xCoordinates, this.yCoordinates);
         if (this.xCoordinates < 0 || this.xCoordinates >= size) {
             this.xCoordinates = size / 2;
             updateXP(1);
@@ -263,48 +250,53 @@ public class ControllerMapGui extends JFrame {
             set = false;
             mapOutputGui();
         } else {
-            textArea.selectAll();
-            textArea.replaceSelection("");
+//            textArea.selectAll();
+//            textArea.replaceSelection("");
             mapOutputGui();
         }
     }
 
     private void updateXP(int type) {
-        switch (type) {
-            case 1:
-                int exp;
-                if (character.getStats().getXp() < 2450) {
-                    exp = 2450;
-                    character.getStats().setXp(exp);
-                } else if (character.getStats().getXp() < 4800) {
-                    exp = 4800;
-                    character.getStats().setXp(exp);
-                } else if (character.getStats().getXp() < 8050) {
-                    exp = 8050;
-                    character.getStats().setXp(exp);
-                } else if (character.getStats().getXp() <= 12200) {
-                    exp = 12200;
-                    character.getStats().setXp(exp);
-                }
-                if (character.getStats().getXp() >= 12201) {
-                    JOptionPane.showMessageDialog(null, "You've reached the maximum amount of XP! You WIN!");
-                    GuiDisplay.endGame();
-                }
-                levelUp();
-                break;
-            case 2:
-                character.getStats().setXp(character.getStats().getXp());
-                WriteToFile.removeLine(character);
-                WriteToFile.writeCharactersStatsChange(character);
-                levelUp();
-                break;
+        if (type == 1) {
+            int exp;
+            if (character.getStats().getXp() < 2450) {
+                exp = 2450;
+                character.getStats().setXp(exp);
+            } else if (character.getStats().getXp() < 4800) {
+                exp = 4800;
+                character.getStats().setXp(exp);
+            } else if (character.getStats().getXp() < 8050) {
+                exp = 8050;
+                character.getStats().setXp(exp);
+            } else if (character.getStats().getXp() <= 12200) {
+                exp = 12200;
+                character.getStats().setXp(exp);
+            }
+            if (character.getStats().getXp() >= 12201) {
+                JOptionPane.showMessageDialog(null, "You've reached the maximum amount of XP! You WIN!");
+                GuiDisplay.endGame();
+            }
+            levelUp();
+        } else if (type == 2) {
+            character.getStats().setXp(550);
+            WriteToFile.removeLine(character);
+            WriteToFile.writeCharactersStatsChange(character);
+            levelUp();
+//                mapOutputGui();
         }
     }
 
     private void win(Monster encountered) {
 //        monsterArrayList.remove(encountered);
         deadMonster(encountered);
-        updateXP(2);
+        if ((character.getStats().getXp() >= 2000 && character.getStats().getXp() < 2450) ||
+                (character.getStats().getXp() >= 4350 && character.getStats().getXp() < 4800) ||
+                (character.getStats().getXp() >= 7700 && character.getStats().getXp() < 8050) ||
+                (character.getStats().getXp() >= 12000 && character.getStats().getXp() < 12200)) {
+            updateXP(1);
+        } else {
+            updateXP(2);
+        }
         if (Controller.chance()) {
             int showButton = JOptionPane.YES_NO_OPTION;
             int yesOrNo = JOptionPane.showConfirmDialog(this, "You destroyed the monster and it has dropped " + encountered.getArtifact().getType() + ". Do you want to pick it up?", "Loot?", showButton);
@@ -317,8 +309,6 @@ public class ControllerMapGui extends JFrame {
                         character.getStats().setAttack(70);
                         WriteToFile.removeLine(character);
                         WriteToFile.writeCharactersStatsChange(character);
-//                        Controller.start(character);
-//                        mapOutputGui();
                         break;
                     case "Armor":
                         Armor armor = new Armor("ARMOR");
@@ -326,8 +316,6 @@ public class ControllerMapGui extends JFrame {
                         character.getStats().setDefence(60);
                         WriteToFile.removeLine(character);
                         WriteToFile.writeCharactersStatsChange(character);
-//                        Controller.start(character);
-//                        mapOutputGui();
                         break;
                     case "Helm":
                         Helm helm = new Helm("HELM");
@@ -335,24 +323,12 @@ public class ControllerMapGui extends JFrame {
                         character.getStats().setHitPoints(80);
                         WriteToFile.removeLine(character);
                         WriteToFile.writeCharactersStatsChange(character);
-//                        Controller.start(character);
-//                        mapOutputGui();
                         break;
                 }
-            } else if (yesOrNo == 1) {
-                updateXP(2);
             }
         } else {
-            updateXP(2);
+//            updateXP(2);
             JOptionPane.showMessageDialog(null, "You killed that beast!... and destroyed the artifact as well... (sigh)");
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                System.exit(0);
-            }
-//            Controller.start(character);
-//            GuiDisplay.game();
-//            mapOutputGui();
         }
     }
 
@@ -369,7 +345,7 @@ public class ControllerMapGui extends JFrame {
         else if (character.getStats().getXp() >= 8050 && character.getStats().getXp() < 12200) {
             this.level = 4;
         }
-        else if (character.getStats().getXp() <= 12200) {
+        else if (character.getStats().getXp() > 12200) {
             this.level = 5;
         }
 
@@ -378,13 +354,19 @@ public class ControllerMapGui extends JFrame {
             WriteToFile.removeLine(character);
             WriteToFile.writeCharactersStatsChange(character);
             JOptionPane.showMessageDialog(null, "You've leveled up!");
-            monsterArrayList.removeAll(monsterArrayList);
-            textArea.append(this.level + "\n");
+//            monsterArrayList.removeAll(monsterArrayList);
+            textArea.selectAll();
+            textArea.replaceSelection("");
+            leveledUpAfterBattle = true;
+//            GuiDisplay.game();
+//            mapOutputGui();
+//            textArea.append(this.level + "\n");
         } else if (this.level == character.getStats().getLevel()) {
             textArea.selectAll();
             textArea.replaceSelection("");
             tempMonsterArray.addAll(monsterArrayList);
-            monsterArrayList.removeAll(monsterArrayList);
+            leveledUpAfterBattle = false;
+//            monsterArrayList.removeAll(monsterArrayList);
         }
     }
 
