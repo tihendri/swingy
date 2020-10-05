@@ -1,8 +1,5 @@
 package com.tihendri.swingy.controller;
 
-import com.tihendri.swingy.model.artifacts.Armor;
-import com.tihendri.swingy.model.artifacts.Helm;
-import com.tihendri.swingy.model.artifacts.Weapon;
 import com.tihendri.swingy.model.characters.Character;
 import com.tihendri.swingy.model.characters.Monster;
 import com.tihendri.swingy.model.characters.NewCharacter;
@@ -88,7 +85,8 @@ public class ControllerMapGui extends JFrame {
                 break;
             }
         }
-        textArea.append("Level: " + character.getStats().getLevel() + " | " +
+        textArea.append(character.getStats().getType() + " " + character.getCharacterName() + " | " +
+                "Level: " + character.getStats().getLevel() + " | " +
                 "Attack: " + character.getStats().getAttack() + " | " +
                 "Defence: " + character.getStats().getDefence() + " | " +
                 "Hit points: " + character.getStats().getHitPoints() + " | " +
@@ -250,8 +248,6 @@ public class ControllerMapGui extends JFrame {
             set = false;
             mapOutputGui();
         } else {
-//            textArea.selectAll();
-//            textArea.replaceSelection("");
             mapOutputGui();
         }
     }
@@ -282,12 +278,10 @@ public class ControllerMapGui extends JFrame {
             WriteToFile.removeLine(character);
             WriteToFile.writeCharactersStatsChange(character);
             levelUp();
-//                mapOutputGui();
         }
     }
 
     private void win(Monster encountered) {
-//        monsterArrayList.remove(encountered);
         deadMonster(encountered);
         if ((character.getStats().getXp() >= 2000 && character.getStats().getXp() < 2450) ||
                 (character.getStats().getXp() >= 4350 && character.getStats().getXp() < 4800) ||
@@ -301,33 +295,9 @@ public class ControllerMapGui extends JFrame {
             int showButton = JOptionPane.YES_NO_OPTION;
             int yesOrNo = JOptionPane.showConfirmDialog(this, "You destroyed the monster and it has dropped " + encountered.getArtifact().getType() + ". Do you want to pick it up?", "Loot?", showButton);
             if (yesOrNo == 0) {
-                String type = encountered.getArtifact().getType();
-                switch (type) {
-                    case "Weapon":
-                        Weapon weapon = new Weapon("WEAPON");
-                        character.setArtifact(weapon);
-                        character.getStats().setAttack(70);
-                        WriteToFile.removeLine(character);
-                        WriteToFile.writeCharactersStatsChange(character);
-                        break;
-                    case "Armor":
-                        Armor armor = new Armor("ARMOR");
-                        character.setArtifact(armor);
-                        character.getStats().setDefence(60);
-                        WriteToFile.removeLine(character);
-                        WriteToFile.writeCharactersStatsChange(character);
-                        break;
-                    case "Helm":
-                        Helm helm = new Helm("HELM");
-                        character.setArtifact(helm);
-                        character.getStats().setHitPoints(80);
-                        WriteToFile.removeLine(character);
-                        WriteToFile.writeCharactersStatsChange(character);
-                        break;
-                }
+                Controller.PickUpLoot(encountered, character);
             }
         } else {
-//            updateXP(2);
             JOptionPane.showMessageDialog(null, "You killed that beast!... and destroyed the artifact as well... (sigh)");
         }
     }
@@ -354,19 +324,13 @@ public class ControllerMapGui extends JFrame {
             WriteToFile.removeLine(character);
             WriteToFile.writeCharactersStatsChange(character);
             JOptionPane.showMessageDialog(null, "You've leveled up!");
-//            monsterArrayList.removeAll(monsterArrayList);
             textArea.selectAll();
             textArea.replaceSelection("");
             leveledUpAfterBattle = true;
-//            GuiDisplay.game();
-//            mapOutputGui();
-//            textArea.append(this.level + "\n");
         } else if (this.level == character.getStats().getLevel()) {
             textArea.selectAll();
             textArea.replaceSelection("");
-            tempMonsterArray.addAll(monsterArrayList);
             leveledUpAfterBattle = false;
-//            monsterArrayList.removeAll(monsterArrayList);
         }
     }
 
