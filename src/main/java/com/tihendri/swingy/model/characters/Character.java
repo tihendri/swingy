@@ -38,12 +38,4 @@ public class Character {
     public void setArtifact(Artifact artifact) {
         this.artifact = artifact;
     }
-
-//    public void setCharacter(String character) {
-//        this.character = character;
-//    }
-
-    public void setStats(Stats stats) {
-        this.stats = stats;
-    }
 }
