@@ -16,7 +16,7 @@ import java.util.Random;
 public class NewCharacter {
 
     public static Character newCharacter(String characterName, String type, Artifact artifact, Stats stats) {
-        if (type.equals("Viking")) {
+        if (type.equalsIgnoreCase("Viking")) {
             return new Viking(characterName, artifact, stats);
         }
         else if (type.equalsIgnoreCase("Crusader")) {
