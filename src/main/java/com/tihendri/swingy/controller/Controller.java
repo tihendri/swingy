@@ -1,6 +1,9 @@
 package com.tihendri.swingy.controller;
 
 import com.tihendri.swingy.Main;
+import com.tihendri.swingy.model.artifacts.Armor;
+import com.tihendri.swingy.model.artifacts.Helm;
+import com.tihendri.swingy.model.artifacts.Weapon;
 import com.tihendri.swingy.model.characters.Character;
 import com.tihendri.swingy.model.characters.Monster;
 import com.tihendri.swingy.view.console.ConsoleViewSupport;
@@ -41,10 +44,10 @@ public class Controller {
                         WriteToFile.close();
                         System.exit(0);
                     default:
-                        System.out.println((char)27 + "[031mWrong input value!" + (char)27 + "[0m");
+                        System.out.println((char)27 + "[031mChoose an option between 1 and 5" + (char)27 + "[0m");
                 }
             } else {
-                System.out.println((char)27 + "[031mWrong input value!" + (char)27 + "[0m");
+                System.out.println((char)27 + "[031mChoose an option between 1 and 5" + (char)27 + "[0m");
             }
         }
     }
@@ -57,10 +60,10 @@ public class Controller {
 
     public static int battle(Monster monster, Character character) {
         Random random = new Random();
-        int turn = 0;
+        int turn = 1;
         int victory = 0;
-        if (chance() || character.getStats().getAttack() > monster.getHitPoints()) {
-            turn = 1;
+        if (character.getStats().getHitPoints() > monster.getHitPoints()) {
+            turn = 0;
         }
         victory = getVictoryGuiConsole(monster, character, random, turn, victory);
         return victory;
@@ -77,7 +80,7 @@ public class Controller {
                         "Your HP: " + character.getStats().getHitPoints());
             }
             if (turn == 0) {
-                damage = random.nextInt(50) - ((character.getStats().getDefence())/5);
+                damage = random.nextInt(70) - ((character.getStats().getDefence())/5);
                 if (monster.getHitPoints() > 0 && damage > 0) {
                     character.getStats().setHitPoints(-damage);
                     WriteToFile.removeLine(character);
@@ -126,5 +129,32 @@ public class Controller {
             }
         }
     return victory;
+    }
+
+    static void PickUpLoot(Monster encountered, Character character) {
+        String type = encountered.getArtifact().getType();
+        switch (type) {
+            case "Weapon":
+                Weapon weapon = new Weapon("WEAPON");
+                character.setArtifact(weapon);
+                character.getStats().setAttack(70);
+                WriteToFile.removeLine(character);
+                WriteToFile.writeCharactersStatsChange(character);
+                break;
+            case "Armor":
+                Armor armor = new Armor("ARMOR");
+                character.setArtifact(armor);
+                character.getStats().setDefence(60);
+                WriteToFile.removeLine(character);
+                WriteToFile.writeCharactersStatsChange(character);
+                break;
+            case "Helm":
+                Helm helm = new Helm("HELM");
+                character.setArtifact(helm);
+                character.getStats().setHitPoints(80);
+                WriteToFile.removeLine(character);
+                WriteToFile.writeCharactersStatsChange(character);
+                break;
+        }
     }
 }
