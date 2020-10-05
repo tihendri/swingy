@@ -122,5 +122,25 @@ public class ConsoleViewSupport {
         startOrQuit();
     }
 
-
+    public static int printLevelUp() {
+        System.out.println("You've leveled up!");
+        System.out.println("1. Continue playing");
+        System.out.println("2. Exit game");
+        Scanner scanner = new Scanner(System.in);
+        while (scanner.hasNextLine()) {
+            String str = scanner.nextLine();
+            if (str.matches("\\s*[1-2]\\s*")) {
+                int opt = Integer.parseInt(str);
+                if (opt == 1) {
+                    return 1;
+                } else if (opt == 2) {
+                    System.out.println("goodbye");
+                    System.exit(0);
+                }
+            } else {
+                System.out.println((char)27 + "[031mYour choice is out of bounds, try again." + (char)27 + "[0m");
+            }
+        }
+        return 0;
+    }
 }
