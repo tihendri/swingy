@@ -7,7 +7,12 @@ import com.tihendri.swingy.model.characters.Character;
 import com.tihendri.swingy.model.characters.NewCharacter;
 import com.tihendri.swingy.model.characters.Stats;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 import java.util.Random;
+import java.util.Set;
 
 public class DatabaseOps {
 
@@ -81,9 +86,13 @@ public class DatabaseOps {
                 break;
             }
         }
+        validationAnnotations(newCharacter);
         WriteToFile.writeCharacters(printStats);
         return newCharacter;
     }
+
+    private static final ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+    private static final Validator validator = factory.getValidator();
 
     public static Character setCharacter(String character) {
         String[] array = character.split(" ");
@@ -106,7 +115,19 @@ public class DatabaseOps {
             Weapon weapon = new Weapon("Weapon");
             characterSet = NewCharacter.newCharacter(name, type, weapon, stats);
         }
-        System.out.println(characterSet);
+        System.out.println();
+        validationAnnotations(characterSet);
         return characterSet;
+    }
+
+    private static void validationAnnotations(Character character) {
+        Set<ConstraintViolation<Character>> constraintViolations = validator.validate(character);
+
+        if (constraintViolations.size() > 0) {
+            for (ConstraintViolation<Character> violation : constraintViolations) {
+                System.out.println(violation.getMessage());
+            }
+            System.exit(1);
+        }
     }
 }
