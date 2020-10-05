@@ -1,11 +1,9 @@
 package com.tihendri.swingy.controller;
 
-import com.tihendri.swingy.model.artifacts.Armor;
-import com.tihendri.swingy.model.artifacts.Helm;
-import com.tihendri.swingy.model.artifacts.Weapon;
 import com.tihendri.swingy.model.characters.Character;
 import com.tihendri.swingy.model.characters.Monster;
 import com.tihendri.swingy.model.characters.NewCharacter;
+import com.tihendri.swingy.view.console.ConsoleViewSupport;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -70,13 +68,16 @@ public class ControllerMap {
         }
         map[this.yCoordinates][this.xCoordinates] = 4;
         for (Monster monster : monsterArrayList) {
-            boolean meetMonster = encounteredMonsterConsole(monster, this.yCoordinates, this.xCoordinates, monster.getMonsterCoordinatesY(), monster.getMonsterCoordinatesX());
+            boolean meetMonster = encounteredMonsterConsole(this.yCoordinates, this.xCoordinates, monster.getMonsterCoordinatesY(), monster.getMonsterCoordinatesX());
             if (meetMonster) {
                 break;
             }
         }
-        System.out.println("Level: " + character.getStats().getLevel() + " | " + "Attack: " + character.getStats().getAttack()+ " | " +
-                "Defence: " + character.getStats().getDefence() + " | " + "HP: " + character.getStats().getHitPoints() + " | " +
+        System.out.println(character.getStats().getType() + " " + character.getCharacterName() + " | " +
+                "Level: " + character.getStats().getLevel() + " | " +
+                "Attack: " + character.getStats().getAttack()+ " | " +
+                "Defence: " + character.getStats().getDefence() + " | " +
+                "HP: " + character.getStats().getHitPoints() + " | " +
                 "Experience: " + character.getStats().getXp() + "\n");
 
         for (int y = 0; y < mapYCoordinate; y++) {
@@ -99,7 +100,7 @@ public class ControllerMap {
         }
     }
 
-    private boolean encounteredMonsterConsole(Monster monster, int yp, int xp, int yv, int xv) {
+    private boolean encounteredMonsterConsole(int yp, int xp, int yv, int xv) {
         if ((xp == xv) && (yp == yv)) {
             Monster encountered = getBattle();
             assert encountered != null;
@@ -129,7 +130,7 @@ public class ControllerMap {
                             System.out.println((char)27 + "[031mYou do not have enough HP to fight (" + character.getStats().getHitPoints() + ")" + (char)27 + "[0m");
                             int whatToDo = whatToDoWithLowHP(encountered);
                             if (whatToDo == 1) {
-//                                deadMonster(encountered);
+                                deadMonster(encountered);
                                 win(encountered);
                                 return true;
                             } else if (whatToDo == 2) {
@@ -143,7 +144,7 @@ public class ControllerMap {
                         } else {
                             int win = Controller.battle(encountered, character);
                             if (win == 1) {
-//                                deadMonster(encountered);
+                                deadMonster(encountered);
                                 win(encountered);
                                 return true;
                             } else if (win == 2) {
@@ -192,9 +193,11 @@ public class ControllerMap {
                     System.out.println((char)27 + "[032mYou are a true warrior! Odin has granted you 30 HP." + (char)27 + "[0m\n");
                     return Controller.battle(encountered, character);
                 } else {
-                    System.out.println((char)27 + "[031mYou failed to escape the clutches of this beast. You face a terrible fate." + (char)27 + "[0m\n");
+                    System.out.println((char)27 + "[031mYou failed to escape the clutches of this beast. You must fight for your life!" + (char)27 + "[0m\n");
                     return Controller.battle(encountered, character);
                 }
+            } else {
+                System.out.println((char)27 + "[031mYour choice is out of bounds, try again." + (char)27 + "[0m");
             }
         }
         return 0;
@@ -207,7 +210,7 @@ public class ControllerMap {
         monsterArrayList.remove(dead);
     }
 
-    private void spawnMonstersOnMap() {
+    public void spawnMonstersOnMap() {
         int i = 0;
         while (i < this.monsters) {
             Random random = new Random();
@@ -246,26 +249,9 @@ public class ControllerMap {
         this.yCoordinates = y;
     }
 
-    private void positionAssist(int positionX, int positionY) {
-        if (positionX < 0 || positionY < 0) {
-            updateXP(1);
-            levelUp();
-            set = false;
-            mapOutput();
-        } else if (positionX >= size || positionY >= size) {
-            updateXP(1);
-            levelUp();
-            set = false;
-            mapOutput();
-        } else {
-            mapOutput();
-        }
-    }
-
     public void updatePosition(int positionX, int positionY) {
         this.xCoordinates += positionX;
         this.yCoordinates += positionY;
-//        positionAssist(this.xCoordinates, this.yCoordinates);
         if (this.xCoordinates < 0 || this.xCoordinates >= size) {
             this.xCoordinates = size / 2;
             updateXP(1);
@@ -314,7 +300,7 @@ public class ControllerMap {
     }
 
     private void win(Monster encountered) {
-//        monsterArrayList.remove(encountered);
+        monsterArrayList.remove(encountered);
         deadMonster(encountered);
         updateXP(2);
         if (Controller.chance()) {
@@ -329,47 +315,18 @@ public class ControllerMap {
                 if (str.matches("1") || str.matches("2")) {
                     int choice = Integer.parseInt(str);
                     if (choice == 1) {
-                        String type = encountered.getArtifact().getType();
-                        switch (type) {
-                            case "Weapon":
-                                Weapon weapon = new Weapon("WEAPON");
-                                character.setArtifact(weapon);
-                                character.getStats().setAttack(70);
-                                WriteToFile.removeLine(character);
-                                WriteToFile.writeCharactersStatsChange(character);
-//                                Controller.start(character);
-                                break;
-                            case "Armor":
-                                Armor armor = new Armor("ARMOR");
-                                character.setArtifact(armor);
-                                character.getStats().setDefence(60);
-                                WriteToFile.removeLine(character);
-                                WriteToFile.writeCharactersStatsChange(character);
-//                                Controller.start(character);
-                                break;
-                            case "Helm":
-                                Helm helm = new Helm("HELM");
-                                character.setArtifact(helm);
-                                character.getStats().setHitPoints(80);
-                                WriteToFile.removeLine(character);
-                                WriteToFile.writeCharactersStatsChange(character);
-//                                Controller.start(character);
-                                break;
-                        }
+                        Controller.PickUpLoot(encountered, character);
                         break;
                     } else if (choice == 2) {
-//                        updateXP(2);
                         break;
                     }
                 } else {
-                    System.out.println((char)27 + "[031mWrong input value!" + (char)27 + "[0m");
+                    System.out.println((char)27 + "[031mYour choice is out of bounds, try again." + (char)27 + "[0m");
                 }
             }
         } else {
-//            updateXP(2);
             System.out.println("You killed that beast!... and destroyed the artifact as well... (sigh)");
         }
-//        Controller.start(character);
     }
 
     private void levelUp() {
@@ -393,29 +350,10 @@ public class ControllerMap {
             character.getStats().setLevel(this.level);
             WriteToFile.removeLine(character);
             WriteToFile.writeCharactersStatsChange(character);
-
-            System.out.println("You've leveled up!");
-            System.out.println("1. Continue playing");
-            System.out.println("2. Exit game");
-
-            Scanner scanner = new Scanner(System.in);
-            while (scanner.hasNextLine()) {
-                String str = scanner.nextLine();
-                if (str.matches("\\s*[1-2]\\s*")) {
-                    int opt = Integer.parseInt(str);
-                    if (opt == 1) {
-//                        monsterArrayList.removeAll(monsterArrayList);
-                        Controller.start(character);
-                    } else if (opt == 2) {
-                        System.out.println("goodbye");
-                        System.exit(0);
-                    }
-                } else {
-                    System.out.println((char)27 + "[031mWrong input value!" + (char)27 + "[0m");
-                }
+            int opt = ConsoleViewSupport.printLevelUp();
+            if (opt == 1) {
+                Controller.start(character);
             }
-        } else if (this.level == character.getStats().getLevel()) {
-//            monsterArrayList.removeAll(monsterArrayList);
         }
     }
 
